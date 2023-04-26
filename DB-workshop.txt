@@ -1,0 +1,33 @@
+SELECT `level`, COUNT(`id`) FROM `degrees` GROUP BY `level`
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELEZIONARE TUTTI I CORSI DEL CORSO DI LAUREA DI INFORMATICA
+SELECT * FROM `courses` JOIN `degrees` ON `courses`.`degree_id` = `degrees`.`id` WHERE `degrees`.`name` = 'Corso di Laurea in Informatica';
+
+SELEZIONARE LE INFORMAZIONI SUL CORSO CON ID = 144, 
+SELECT * FROM`courses` JOIN `exams` ON `courses`.`id` = `exams`.`course_id` WHERE `courses`.`id` = 144; 
+
+SELEZIONARE A QUALE DIPARTIMENTO APPARTIENE IL CORSO DI LAUREA IN DIRITTO DELL'ECONOMIA
+SELECT `departments`. *, `degrees`.`name` FROM `departments` JOIN `degrees` ON `departments`.`id` = `degrees`.`department_id` WHERE `degrees`.`name` = 'Corso di Laurea in Diritto dell\'Economia'; 
+
+SELEZIONARE TUTTI GLI ESAMI DEL CORSO DI LAUREA MAGISTRALE IN FISICA DEL PRIMO ANNO
+SELECT `degrees`.`name`, `courses`.`year`, `exams`.`date`, `exams`.`hour`, `exams`.`location`,`exams`.`address` FROM `degrees` JOIN `courses` ON `degrees`.`id` = `courses`.`degree_id` JOIN `exams` ON `courses`.`id` = `exams`.`course_id` WHERE `degrees`.`name` = 'Corso di Laurea Magistrale in Fisica' AND `courses`.`year` = 1;  
+
+SELEZIONARE TUTTI I DOCENTI CHE INSEGNANO NEL CORSO DI LAUREA IN LETTERE
+SELECT DISTINCT `teachers`.`name`, `teachers`.`surname`, `teachers`.`phone`, `teachers`.`email` FROM `teachers` JOIN `course_teacher` ON `teachers`.`id` = `course_teacher`.`teacher_id` JOIN `courses` ON `courses`.`id` = `course_teacher`.`course_id` JOIN `degrees` ON `courses`.`degree_id` = `degrees`.`id` WHERE `degrees`.`name` = 'Corso di Laurea in Lettere' ORDER BY `teachers`.`email`; 
+
+SELEZIONARE IL LIBRETTO UNIVERSITARIO DI MIRCO MESSINA (matricola n.620320)
+SELECT *
+FROM `students`
+JOIN `exam_student` ON `students`.`id` = `exam_student`.`student_id`
+JOIN `exams` ON `exam_student`.`student_id` = `exams`.`id`
+JOIN `courses` ON `exams`.`course_id`
+
+SELEZIONARE IL VOTO MEDIO DI SUPERAMENTO D'ESAME PER OGNI CORSO, CON ANCHE I DATI DEL CORSO DI LUREA ASSOCIATO, ORDINATI PER MEDIA VOTO DECRESCENTE
+SELECT AVG (`exam_student`.`vote`) AS `media_voto`, `courses`.`name` AS `nome_corso`, `degrees`.`name` AS `nome_laurea`
+FROM `exam_student`
+JOIN `exams` ON `exam_student`.`exam_id` = `exams`.`id`
+JOIN `courses` ON `courses`.`id` =`exams`.`course_id`
+JOIN `degrees` ON `courses`.`degree_id` = `degrees`.`id`
+WHERE `exam_student`.`vote` >= 18
+GROUP BY `courses`.`id`;
